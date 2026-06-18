@@ -1,0 +1,250 @@
+COLUMNS:
+  user_id: int64
+  user_age_group: object
+  user_gender: object
+  user_location_region: object
+  user_device_type: object
+  user_os: object
+  user_browser: object
+  user_interest_category: object
+
+  user_total_impressions: int64
+  user_total_clicks: int64
+  user_historical_ctr: float64
+  user_avg_session_duration: float64
+  user_days_active: float64
+  user_conversion_rate: float64
+
+  ad_id: int64
+  advertiser_id: int64
+  ad_category: object
+  ad_quality_score: float64
+  ad_position: int64
+  ad_creative_type: object
+  ad_size: object
+
+  advertiser_historical_ctr: float64
+  advertiser_budget_utilization: float64
+  advertiser_days_active: float64
+
+  page_category: object
+  page_quality_score: float64
+  page_dwell_time: float64
+
+  hour_of_day: int64
+  day_of_week: int64
+  is_weekend: int64
+  is_business_hours: int64
+
+  time_since_last_impression: float64
+  time_since_last_click: float64
+
+  sequence_position: int64
+  previous_ad_clicks_today: int64
+
+  month: int64
+  seasonality: object
+  interest_match: int64
+
+  timestamp: object
+  click: int64
+
+TARGET_COLUMN: click
+
+NUMERICAL_RANGES:
+  user_historical_ctr:
+    min: 0.0
+    max: 1.0
+
+  user_conversion_rate:
+    min: 0.0
+    max: 1.0
+
+  advertiser_historical_ctr:
+    min: 0.0
+    max: 1.0
+
+  advertiser_budget_utilization:
+    min: 0.0
+    max: 1.0
+
+  hour_of_day:
+    min: 0
+    max: 23
+
+  day_of_week:
+    min: 0
+    max: 6
+
+  month:
+    min: 1
+    max: 12
+
+  ad_position:
+    min: 1
+    max: 10
+
+  ad_quality_score:
+    min: 1.0
+    max: 10.0
+
+  page_quality_score:
+    min: 1.0
+    max: 10.0
+
+  user_total_impressions:
+    min: 0
+    max: 100000
+
+  user_total_clicks:
+    min: 0
+    max: 100000
+
+  page_dwell_time:
+    min: 0.0
+    max: 100000.0
+
+  user_avg_session_duration:
+    min: 0.0
+    max: 100000.0
+
+  advertiser_days_active:
+    min: 0.0
+    max: 10000.0
+
+  user_days_active:
+    min: 0.0
+    max: 10000.0
+
+  time_since_last_impression:
+    min: 0.0
+    max: 1000000.0
+
+  time_since_last_click:
+    min: 0.0
+    max: 1000000.0
+
+  sequence_position:
+    min: 1
+    max: 10
+
+  previous_ad_clicks_today:
+    min: 0
+    max: 1000
+
+  interest_match:
+    min: 0
+    max: 1
+
+  is_weekend:
+    min: 0
+    max: 1
+
+  is_business_hours:
+    min: 0
+    max: 1
+
+CATEGORICAL_VALUES:
+  user_gender:
+    - M
+    - F
+    - U
+
+  user_device_type:
+    - mobile
+    - desktop
+    - tablet
+
+  user_os:
+    - iOS
+    - Android
+    - Windows
+    - MacOS
+
+  user_browser:
+    - Chrome
+    - Safari
+    - Firefox
+    - Edge
+
+  user_age_group:
+    - 18-24
+    - 25-34
+    - 35-44
+    - 45-54
+    - 55+
+
+  user_location_region:
+    - US-WEST
+    - US-EAST
+    - EU
+    - ASIA
+
+  user_interest_category:
+    - Technology
+    - Finance
+    - Retail
+    - Health
+    - Travel
+    - Entertainment
+    - Education
+
+  ad_category:
+    - Technology
+    - Finance
+    - Retail
+    - Health
+    - Travel
+    - Entertainment
+    - Education
+
+  ad_creative_type:
+    - image
+    - video
+    - text
+    - carousel
+
+  ad_size:
+    - 300x250
+    - 728x90
+    - 320x50
+    - 160x600
+
+  page_category:
+    - News
+    - Sports
+    - Shopping
+    - Social
+    - Video
+    - Games
+    - Finance
+
+  seasonality:
+    - off-peak
+    - peak
+    - holiday
+
+THRESHOLDS:
+  missing_value_threshold: 0.30
+  correlation_threshold: 0.95
+  drift_pvalue_threshold: 0.05
+  minimum_minority_class: 0.01
+  max_duplicate_percentage: 0.01
+
+HIGH_CARDINALITY_COLUMNS:
+  - user_id
+  - ad_id
+  - advertiser_id
+
+BUSINESS_RULES:
+  clicks_less_than_impressions: true
+  validate_ctr_consistency: true
+
+LEAKAGE_COLUMNS:
+  - future_clicks
+  - future_ctr
+  - future_conversion_rate
+  - future_revenue
+  - post_click_conversion
+
+TIMESTAMP_COLUMN: timestamp
