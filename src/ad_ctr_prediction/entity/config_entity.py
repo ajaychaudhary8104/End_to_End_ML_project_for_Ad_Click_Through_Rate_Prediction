@@ -25,3 +25,10 @@ class DataValidationConfig:
     leakage_columns: list
     timestamp_column: str
     target_column: str
+
+@dataclass(frozen=True)
+class DataPreprocessingConfig:
+    root_dir: Path
+    input_data_path: Path
+    output_data_path: Path
+    preprocessing_report_path: Path    

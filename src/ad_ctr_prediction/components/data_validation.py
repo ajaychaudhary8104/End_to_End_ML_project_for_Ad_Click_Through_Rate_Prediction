@@ -201,7 +201,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Schema Validation Passed"
+                    "[SUCCESS] Schema Validation Passed"
                 )
 
             else:
@@ -272,7 +272,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Datatype Validation Passed"
+                    "[SUCCESS] Datatype Validation Passed"
                 )
 
             else:
@@ -347,7 +347,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Missing Value Validation Passed"
+                    "[SUCCESS] Missing Value Validation Passed"
                 )
 
             else:
@@ -418,7 +418,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Duplicate Validation Passed"
+                    "[SUCCESS] Duplicate Validation Passed"
                 )
 
             else:
@@ -509,7 +509,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Numerical Range "
+                    "[SUCCESS] Numerical Range "
                     "Validation Passed"
                 )
 
@@ -571,7 +571,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Target Validation Passed"
+                    "[SUCCESS] Target Validation Passed"
                 )
 
             else:
@@ -649,7 +649,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Categorical Validation Passed"
+                    "[SUCCESS] Categorical Validation Passed"
                 )
 
             else:
@@ -719,7 +719,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Timestamp Validation Passed"
+                    "[SUCCESS] Timestamp Validation Passed"
                 )
 
             else:
@@ -841,7 +841,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Business Rule Validation Passed"
+                    "[SUCCESS] Business Rule Validation Passed"
                 )
 
             else:
@@ -909,7 +909,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Infinite Value Validation Passed"
+                    "[SUCCESS] Infinite Value Validation Passed"
                 )
 
             else:
@@ -989,7 +989,7 @@ class DataValidation:
             )
 
             logger.info(
-                "✓ Outlier Analysis Completed"
+                "[SUCCESS] Outlier Analysis Completed"
             )
 
             return True
@@ -1030,7 +1030,7 @@ class DataValidation:
             )
 
             logger.info(
-                "✓ Cardinality Analysis Completed"
+                "[SUCCESS] Cardinality Analysis Completed"
             )
 
             return True
@@ -1086,7 +1086,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Leakage Validation Passed"
+                    "[SUCCESS] Leakage Validation Passed"
                 )
 
             else:
@@ -1195,7 +1195,7 @@ class DataValidation:
             )
 
             logger.info(
-                "✓ Correlation Analysis Completed"
+                "[SUCCESS] Correlation Analysis Completed"
             )
 
             return True
@@ -1256,7 +1256,7 @@ class DataValidation:
             if validation_passed:
 
                 logger.info(
-                    "✓ Class Distribution Validation Passed"
+                    "[SUCCESS] Class Distribution Validation Passed"
                 )
 
             else:
@@ -1357,7 +1357,7 @@ class DataValidation:
             )
 
             logger.info(
-                "✓ Drift Analysis Completed"
+                "[SUCCESS] Drift Analysis Completed"
             )
 
             return overall_pass
@@ -1523,14 +1523,12 @@ class DataValidation:
 
             if overall_status:
 
-                logger.info(
-                    "✓ ALL VALIDATIONS PASSED"
-                )
+                logger.info("[SUCCESS] ALL VALIDATIONS PASSED")
 
             else:
 
                 logger.warning(
-                    "✗ SOME VALIDATIONS FAILED"
+                    "[FAILED] SOME VALIDATIONS FAILED"
                 )
 
             return overall_status

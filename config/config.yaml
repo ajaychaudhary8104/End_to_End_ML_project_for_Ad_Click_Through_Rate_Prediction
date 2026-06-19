@@ -19,3 +19,13 @@ data_validation:
   DRIFT_REPORT_FILE: artifacts/data_validation/drift_report.json
 
   STATS_REPORT_FILE: artifacts/data_validation/dataset_statistics.json
+
+data_preprocessing:
+
+  root_dir: artifacts/data_preprocessing
+
+  input_data_path: artifacts/data_ingestion/CTR_raw_data.csv
+
+  output_data_path: artifacts/data_preprocessing/preprocessed_data.csv
+
+  preprocessing_report_path: artifacts/data_preprocessing/preprocessing_report.json  

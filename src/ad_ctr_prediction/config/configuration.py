@@ -1,6 +1,6 @@
 from src.ad_ctr_prediction.constants import *
 from src.ad_ctr_prediction.utils.common import read_yaml, create_directories
-from src.ad_ctr_prediction.entity.config_entity import DataIngestionConfig, DataValidationConfig
+from src.ad_ctr_prediction.entity.config_entity import DataIngestionConfig, DataPreprocessingConfig, DataValidationConfig
 
 
 class ConfigurationManager:
@@ -76,3 +76,24 @@ class ConfigurationManager:
         )
 
         return validation_config
+    
+    def get_data_preprocessing_config(self) -> DataPreprocessingConfig:
+
+        config = self.config.data_preprocessing
+
+        create_directories(
+            [config.root_dir]
+        )
+
+        data_preprocessing = DataPreprocessingConfig(
+
+            root_dir=Path(config.root_dir),
+
+            input_data_path=Path(config.input_data_path),
+
+            output_data_path=Path(config.output_data_path),
+
+            preprocessing_report_path=Path(config.preprocessing_report_path)
+        )  
+
+        return data_preprocessing
