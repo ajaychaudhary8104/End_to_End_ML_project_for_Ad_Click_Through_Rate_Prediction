@@ -57,3 +57,14 @@ class DataTransformationConfig:
     validation_size: float
     random_state: int
     target_column: str
+
+
+@dataclass(frozen=True)
+class ModelTrainingConfig:
+    root_dir: Path
+    train_file_path: Path
+    validation_file_path: Path
+    model_file_path: Path
+    metrics_file_path: Path
+    model_params: dict
+    target_column: str    

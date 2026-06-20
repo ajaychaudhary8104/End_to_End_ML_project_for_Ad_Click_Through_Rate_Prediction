@@ -55,3 +55,11 @@ data_transformation:
   validation_size: 0.15
   random_state: 42
   target_column: click
+
+model_training:
+  root_dir: artifacts/model_training
+  train_file_path: artifacts/data_transformation/split_data/train.csv
+  validation_file_path: artifacts/data_transformation/split_data/validation.csv
+  model_file_path: artifacts/model_training/xgboost_model.pkl
+  metrics_file_path: artifacts/model_training/model_metrics.json
+  target_column: click

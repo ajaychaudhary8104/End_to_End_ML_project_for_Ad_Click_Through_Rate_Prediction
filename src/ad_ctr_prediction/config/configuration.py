@@ -1,7 +1,8 @@
 from src.ad_ctr_prediction.constants import *
 from src.ad_ctr_prediction.utils.common import read_yaml, create_directories
 from src.ad_ctr_prediction.entity.config_entity import (DataIngestionConfig, DataPreprocessingConfig,
-                                                         DataValidationConfig, FeatureEngineeringConfig , DataTransformationConfig)
+                                                         DataValidationConfig, FeatureEngineeringConfig ,
+                                                           DataTransformationConfig, ModelTrainingConfig)
 
 
 class ConfigurationManager:
@@ -144,3 +145,21 @@ class ConfigurationManager:
                                                             target_column=str(config.target_column)
                                                             )
         return data_transformation_config
+    
+
+    def get_model_training_config(self) -> ModelTrainingConfig:
+        config = self.config.model_training
+
+        create_directories([config.root_dir])
+
+        model_training_config = ModelTrainingConfig(
+            root_dir=config.root_dir,
+            train_file_path=config.train_file_path,
+            validation_file_path=config.validation_file_path,
+            model_file_path=config.model_file_path,
+            metrics_file_path=config.metrics_file_path,
+            model_params=dict(self.params.model_params),
+            target_column=config.target_column
+        )
+
+        return model_training_config 
