@@ -1,6 +1,7 @@
 from src.ad_ctr_prediction.constants import *
 from src.ad_ctr_prediction.utils.common import read_yaml, create_directories
-from src.ad_ctr_prediction.entity.config_entity import DataIngestionConfig, DataPreprocessingConfig, DataValidationConfig
+from src.ad_ctr_prediction.entity.config_entity import (DataIngestionConfig, DataPreprocessingConfig,
+                                                         DataValidationConfig, FeatureEngineeringConfig)
 
 
 class ConfigurationManager:
@@ -97,3 +98,24 @@ class ConfigurationManager:
         )  
 
         return data_preprocessing
+    
+    def get_feature_engineering_config(self) -> FeatureEngineeringConfig:
+
+        config = self.config.feature_engineering
+
+        create_directories(
+            [config.root_dir]
+        )
+
+        feature_engineering_config = FeatureEngineeringConfig(
+
+            root_dir=Path(config.root_dir),
+
+            input_data_path=Path(config.input_data_path),
+
+            output_data_path=Path(config.output_data_path),
+
+            feature_report_path=Path(config.feature_report_path)
+        )    
+
+        return feature_engineering_config

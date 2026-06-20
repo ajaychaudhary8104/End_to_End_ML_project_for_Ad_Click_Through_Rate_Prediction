@@ -32,3 +32,11 @@ class DataPreprocessingConfig:
     input_data_path: Path
     output_data_path: Path
     preprocessing_report_path: Path    
+
+
+@dataclass(frozen=True)
+class FeatureEngineeringConfig:
+    root_dir: Path
+    input_data_path: Path
+    output_data_path: Path
+    feature_report_path: Path    
