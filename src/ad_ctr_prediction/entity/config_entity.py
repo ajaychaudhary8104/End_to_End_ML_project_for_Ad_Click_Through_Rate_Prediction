@@ -40,3 +40,20 @@ class FeatureEngineeringConfig:
     input_data_path: Path
     output_data_path: Path
     feature_report_path: Path    
+
+
+@dataclass(frozen=True)
+class DataTransformationConfig:
+    root_dir: Path
+    input_data_path: Path
+    feature_selector_path: Path
+    feature_names_path: Path
+    metadata_path: Path
+    split_artifacts_dir: Path
+    train_file_path: Path
+    validation_file_path: Path
+    test_file_path: Path
+    test_size: float
+    validation_size: float
+    random_state: int
+    target_column: str

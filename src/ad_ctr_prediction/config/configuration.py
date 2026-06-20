@@ -1,7 +1,7 @@
 from src.ad_ctr_prediction.constants import *
 from src.ad_ctr_prediction.utils.common import read_yaml, create_directories
 from src.ad_ctr_prediction.entity.config_entity import (DataIngestionConfig, DataPreprocessingConfig,
-                                                         DataValidationConfig, FeatureEngineeringConfig)
+                                                         DataValidationConfig, FeatureEngineeringConfig , DataTransformationConfig)
 
 
 class ConfigurationManager:
@@ -119,3 +119,28 @@ class ConfigurationManager:
         )    
 
         return feature_engineering_config
+    
+
+    def get_data_transformation_config(self) -> DataTransformationConfig:
+
+        config = self.config.data_transformation
+
+        create_directories(
+            [config.root_dir]
+        )
+
+        data_transformation_config = DataTransformationConfig(root_dir=Path(config.root_dir),
+                                                            input_data_path=Path(config.input_data_path),
+                                                            feature_selector_path=Path(config.feature_selector_path),
+                                                            feature_names_path=Path(config.feature_names_path),
+                                                            metadata_path=Path(config.metadata_path),
+                                                            split_artifacts_dir=Path(config.split_artifacts_dir),
+                                                            train_file_path=Path(config.train_file_path),
+                                                            validation_file_path=Path(config.validation_file_path),
+                                                            test_file_path=Path(config.test_file_path),
+                                                            test_size=float(config.test_size),
+                                                            validation_size=float(config.validation_size),
+                                                            random_state=int(config.random_state),
+                                                            target_column=str(config.target_column)
+                                                            )
+        return data_transformation_config
