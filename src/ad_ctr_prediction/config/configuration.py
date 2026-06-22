@@ -3,7 +3,7 @@ from src.ad_ctr_prediction.utils.common import read_yaml, create_directories
 from src.ad_ctr_prediction.entity.config_entity import (DataIngestionConfig, DataPreprocessingConfig,
                                                          DataValidationConfig, FeatureEngineeringConfig ,
                                                            DataTransformationConfig, ModelTrainingConfig,
-                                                           ModelEvaluationConfig)
+                                                           ModelEvaluationConfig, ModelPromotionConfig)
 
 
 class ConfigurationManager:
@@ -183,3 +183,24 @@ class ConfigurationManager:
         )
 
         return model_evaluation_config
+    
+    def get_model_promotion_config(self) -> ModelPromotionConfig:
+        config = self.config.model_promotion
+
+        create_directories([config.root_dir])
+
+        model_promotion_config = ModelPromotionConfig(
+            root_dir=config.root_dir,
+            metrics_file_path=config.metrics_file_path,
+            model_file_path=config.model_file_path,
+            production_model_path=config.production_model_path,
+            registered_model_name=config.registered_model_name,
+            target_stage=config.target_stage,
+            mlflow_uri=config.mlflow_uri,
+            promote_metric=config.promote_metric,
+            promote_threshold=float(config.promote_threshold),
+            archive_existing_versions=bool(config.archive_existing_versions),
+            copy_local_model=bool(config.copy_local_model)
+        )
+
+        return model_promotion_config  
