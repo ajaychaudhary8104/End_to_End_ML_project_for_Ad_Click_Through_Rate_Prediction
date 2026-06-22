@@ -5,6 +5,7 @@ from ad_ctr_prediction.pipeline.stage_03_data_preprocessing import DataPreproces
 from src.ad_ctr_prediction.pipeline.stage_04_feature_engineering import FeatureEngineeringTrainingPipeline
 from ad_ctr_prediction.pipeline.stage_05_data_transformation import DataTransformationTrainingPipeline
 from ad_ctr_prediction.pipeline.stage_06_model_training import ModelTrainingPipeline
+from ad_ctr_prediction.pipeline.stage_07_model_evaluation import ModelEvaluationPipeline
 
 
 STAGE_NAME = "Data Ingestion stage"
@@ -67,6 +68,17 @@ try:
    logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
    model_training = ModelTrainingPipeline()
    model_training.main()
+   logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+except Exception as e:
+        logger.exception(e)
+        raise e
+
+
+STAGE_NAME = "Model Evaluation stage"
+try:
+   logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
+   model_evaluation = ModelEvaluationPipeline()
+   model_evaluation.main()
    logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
 except Exception as e:
         logger.exception(e)
