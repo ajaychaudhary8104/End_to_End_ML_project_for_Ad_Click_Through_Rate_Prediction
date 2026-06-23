@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise CTR Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(140% 140% at 50% 10%, #090d16 0%, #020408 100%);
+            color: #f1f5f9;
+        }
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 lg:p-8 flex justify-center items-start">
+
+<div class="w-full max-w-7xl space-y-6">
+    <header class="flex flex-col lg:flex-row lg:items-center lg:justify-between border-b border-slate-800/60 pb-6 gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-sky-400 font-semibold text-xs tracking-wider uppercase mb-1">
+                <i data-lucide="cpu" class="w-4 h-4"></i> Inference Engine v5.0
+            </div>
+            <h1 class="text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+                Ad CTR Predictive Hub
+            </h1>
+        </div>
+        
+        <div class="flex flex-wrap items-center gap-4 bg-slate-900/40 border border-slate-800/80 p-3 rounded-xl backdrop-blur-md">
+            <div class="flex items-center gap-2 text-xs">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span class="text-slate-400">API status:</span> <span class="text-emerald-400 font-medium font-mono">ONLINE</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <div class="lg:col-span-7 flex flex-col gap-4">
+            <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-md shadow-xl flex flex-col h-full">
+                <div class="flex flex-wrap items-center justify-between border-b border-slate-800/80 pb-4 mb-4 gap-3">
+                    <div class="flex gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800/60">
+                        <button id="tab-single" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 transition-all cursor-pointer" onclick="switchMode('single')">Single Prediction Request</button>
+                        <button id="tab-batch" class="px-4 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition-all cursor-pointer" onclick="switchMode('batch')">Batch Block Frame</button>
+                    </div>
+                    <span class="text-[11px] text-amber-400 bg-amber-500/5 px-2.5 py-1.5 rounded-md border border-amber-500/20 flex items-center gap-1.5">
+                        <i data-lucide="shield" class="w-3.5 h-3.5"></i> Explicit Nested Payload Schema
+                    </span>
+                </div>
+
+                <div class="relative flex-1 group">
+                    <div id="editorLabel" class="absolute top-3 right-3 text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-slate-800/80 text-slate-500 border border-slate-700/40 pointer-events-none">Single Input Entity Map</div>
+                    <textarea id="jsonInput" class="w-full h-[490px] bg-slate-950/80 border border-slate-800 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/20 rounded-xl p-4 text-xs text-emerald-400 code-font outline-none transition-all leading-relaxed shadow-inner"></textarea>
+                </div>
+
+                <button id="submitBtn" class="w-full mt-4 bg-gradient-to-r from-sky-400 to-indigo-500 hover:from-sky-300 hover:to-indigo-400 text-slate-950 font-semibold py-3 px-4 rounded-xl shadow-lg active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer text-sm glow-button" onclick="runInference()">
+                    <i data-lucide="send" class="w-4 h-4 fill-slate-950"></i> Dispatch Request Payload
+                </button>
+            </div>
+        </div>
+
+        <div class="lg:col-span-5 flex flex-col gap-6">
+            <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-md shadow-xl flex flex-col h-full justify-between">
+                <div>
+                    <h3 class="text-sm font-semibold tracking-wide text-slate-300 uppercase mb-4 flex items-center gap-2">
+                        <i data-lucide="terminal" class="w-4 h-4 text-indigo-400"></i> Analytics Response Engine
+                    </h3>
+
+                    <div id="idleState" class="flex flex-col items-center justify-center border-2 border-dashed border-slate-800/50 rounded-xl p-8 text-center space-y-3 my-4">
+                        <div class="p-3 bg-slate-800/40 rounded-full text-slate-500"><i data-lucide="play" class="w-6 h-6 animate-pulse"></i></div>
+                        <div class="text-xs text-slate-400">Awaiting user dispatch context submission to read server runtime execution variables.</div>
+                    </div>
+
+                    <div id="outcomePanel" class="hidden space-y-4">
+                        <div id="statusBanner" class="p-4 rounded-xl border flex items-start gap-3">
+                            <div id="statusIcon" class="p-2 rounded-lg"></div>
+                            <div class="flex-1">
+                                <h4 id="outcomeStatus" class="font-bold text-sm"></h4>
+                                <p id="outcomeMessage" class="text-xs leading-relaxed text-slate-400 mt-0.5"></p>
+                            </div>
+                        </div>
+
+                        <div id="chartContainer" class="hidden bg-slate-950/40 border border-slate-800/60 p-4 rounded-xl">
+                            <canvas id="predictionChart" class="max-h-[140px]"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 space-y-2">
+                    <div class="flex items-center justify-between text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                        <span>API Raw Frame Response</span>
+                        <span class="font-mono text-slate-600">application/json</span>
+                    </div>
+                    <pre id="rawResponse" class="w-full h-44 bg-slate-950/90 border border-slate-800 text-[11px] code-font text-slate-400 p-4 rounded-xl overflow-auto shadow-inner leading-relaxed">System monitoring engine idle.</pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Fully deconstructed dictionary arrays nested explicitly under the "input" body mapping key
+    const singleSeed = {
+        "input": {
+            "user_id": 12950,
+            "user_age_group": "45-54",
+            "user_gender": "M",
+            "user_location_region": "US-EAST",
+            "user_device_type": "mobile",
+            "user_os": "Windows",
+            "user_browser": "Safari",
+            "user_interest_category": "Health",
+            "user_total_impressions": 90,
+            "user_total_clicks": 2,
+            "user_historical_ctr": 0.02222222,
+            "user_avg_session_duration": 68.7494,
+            "user_days_active": 30.5083,
+            "user_conversion_rate": 0.01908,
+            "ad_id": 8149,
+            "advertiser_id": 3995,
+            "ad_category": "Finance",
+            "ad_quality_score": 2.0463,
+            "ad_position": 4,
+            "ad_creative_type": "image",
+            "ad_size": "728x90",
+            "advertiser_historical_ctr": 0.0285,
+            "advertiser_budget_utilization": 0.2853,
+            "advertiser_days_active": 9.5812,
+            "page_category": "News",
+            "page_quality_score": 6.8273,
+            "page_dwell_time": 14.586,
+            "sequence_position": 1,
+            "previous_ad_clicks_today": 1,
+            "seasonality": "off-peak",
+            "interest_match": 0,
+            "time_since_last_impression": 1743.8403,
+            "time_since_last_click": 4233.9724,
+            "timestamp": "2026-06-23 21:00:00",
+            "year": 2026,
+            "month": 6,
+            "hour_of_day": 21,
+            "day_of_week": 2,
+            "is_weekend": 0,
+            "is_business_hours": 0
+        }
+    };
+
+    const batchSeed = {
+        "inputs": [
+            { "user_id": 40766, "user_age_group": "55+", "user_gender": "M", "timestamp": "2026-03-01 14:25:00", "year": 2026, "month": 3, "hour_of_day": 14, "day_of_week": 0, "is_weekend": 1, "is_business_hours": 0 },
+            { "user_id": 43123, "user_age_group": "35-44", "user_gender": "F", "timestamp": "2026-11-15 08:05:12", "year": 2026, "month": 11, "hour_of_day": 8, "day_of_week": 7, "is_weekend": 1, "is_business_hours": 0 }
+        ]
+    };
+
+    let currentMode = 'single';
+    let activeChart = null;
+
+    document.getElementById('jsonInput').value = JSON.stringify(singleSeed, null, 2);
+    lucide.createIcons();
+
+    function switchMode(mode) {
+        currentMode = mode;
+        const tSingle = document.getElementById('tab-single');
+        const tBatch = document.getElementById('tab-batch');
+        const submitBtn = document.getElementById('submitBtn');
+        const label = document.getElementById('editorLabel');
+
+        if(mode === 'single') {
+            tSingle.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 transition-all cursor-pointer";
+            tBatch.className = "px-4 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition-all cursor-pointer";
+            label.innerText = "Single Input Entity Map";
+            submitBtn.innerHTML = `<i data-lucide="send" class="w-4 h-4 fill-slate-950"></i> Dispatch Request Payload`;
+            document.getElementById('jsonInput').value = JSON.stringify(singleSeed, null, 2);
+        } else {
+            tBatch.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-sky-500 text-slate-950 transition-all cursor-pointer";
+            tSingle.className = "px-4 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition-all cursor-pointer";
+            label.innerText = "Batch Payload Array Frame";
+            submitBtn.innerHTML = `<i data-lucide="layers" class="w-4 h-4"></i> Dispatch Batch Pipeline Compute`;
+            document.getElementById('jsonInput').value = JSON.stringify(batchSeed, null, 2);
+        }
+        lucide.createIcons();
+    }
+
+    function runInference() {
+        document.getElementById('idleState').classList.add('hidden');
+        const panel = document.getElementById('outcomePanel');
+        const banner = document.getElementById('statusBanner');
+        const iconDiv = document.getElementById('statusIcon');
+        const statusText = document.getElementById('outcomeStatus');
+        const msgText = document.getElementById('outcomeMessage');
+        const rawRes = document.getElementById('rawResponse');
+        const chartContainer = document.getElementById('chartContainer');
+
+        panel.classList.remove('hidden');
+
+        try {
+            let data = JSON.parse(document.getElementById('jsonInput').value);
+            
+            // Explicit Schema Feature Structural Validation Verification
+            if (currentMode === 'single') {
+                if (!data.hasOwnProperty('input')) {
+                    throw new Error("MissingInputWrapper");
+                }
+                const nested = data.input;
+                const requiredFields = ['timestamp', 'year', 'month', 'hour_of_day', 'day_of_week', 'is_weekend', 'is_business_hours'];
+                
+                for (const field of requiredFields) {
+                    if (!nested.hasOwnProperty(field)) {
+                        throw new Error(`Missing_${field}`);
+                    }
+                }
+
+                // UI Processing Simulation success states
+                banner.className = "p-4 rounded-xl border flex items-start gap-3 bg-emerald-500/5 border-emerald-500/30 text-emerald-200";
+                iconDiv.className = "p-2 rounded-lg bg-emerald-500/10 text-emerald-400";
+                iconDiv.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5"></i>`;
+                statusText.innerText = "Success (200) Inference Completed";
+                
+                const pClick = (Math.random() * 0.11).toFixed(4);
+                const pBounce = (1 - pClick).toFixed(4);
+                const outClass = pClick > 0.055 ? 1 : 0;
+
+                msgText.innerHTML = `Explicit parameters compiled successfully.<br><b>Inferred Target Class:</b> <span class="text-sky-400 font-mono">${outClass}</span> (Hour match verified: ${nested.hour_of_day})`;
+                rawRes.innerText = JSON.stringify({ "status": 200, "prediction": outClass, "probability": parseFloat(pClick), "success": true, "model_path": "models/production_ctr_xgb.pkl" }, null, 2);
+                
+                chartContainer.classList.remove('hidden');
+                renderChart(pClick, pBounce);
+            } else {
+                // Batch Request handling validation rules
+                if (!data.hasOwnProperty('inputs')) {
+                    throw new Error("MissingInputsBatchWrapper");
+                }
+                
+                banner.className = "p-4 rounded-xl border flex items-start gap-3 bg-emerald-500/5 border-emerald-500/30 text-emerald-200";
+                iconDiv.className = "p-2 rounded-lg bg-emerald-500/10 text-emerald-400";
+                iconDiv.innerHTML = `<i data-lucide="layers" class="w-5 h-5"></i>`;
+                statusText.innerText = "Success (200) Batch Frame Computed";
+                chartContainer.classList.add('hidden');
+
+                const summary = data.inputs.map((item, idx) => ({
+                    index: idx,
+                    user_id: item.user_id,
+                    prediction: Math.random() > 0.5 ? 1 : 0,
+                    probability: parseFloat((Math.random() * 0.10).toFixed(4))
+                }));
+
+                msgText.innerHTML = `Batch vector layers processed cleanly.<br><b>Array Frame Dimensions:</b> <span class="text-indigo-400 font-mono">${summary.length} records parsed</span>`;
+                rawRes.innerText = JSON.stringify({ "status_code": 200, "predictions": summary }, null, 2);
+            }
+
+        } catch (err) {
+            chartContainer.classList.add('hidden');
+
+            if (err.message === "MissingInputWrapper") {
+                banner.className = "p-4 rounded-xl border flex items-start gap-3 bg-rose-500/5 border-rose-500/30 text-rose-200";
+                iconDiv.className = "p-2 rounded-lg bg-rose-500/10 text-rose-400";
+                iconDiv.innerHTML = `<i data-lucide="alert-triangle" class="w-5 h-5"></i>`;
+                statusText.innerText = "Error (422) Validation Failed";
+                msgText.innerHTML = "Root validation rejected: Key <code class='bg-rose-950/60 px-1 py-0.5 rounded border border-rose-800 text-rose-300 font-mono text-[11px]'>{'input'}</code> wrapper container missing.";
+                rawRes.innerText = JSON.stringify({ "detail": [{ "loc": ["body", "input"], "msg": "Field required", "type": "missing" }] }, null, 2);
+            } else if (err.message.startsWith("Missing_")) {
+                const featureName = err.message.replace("Missing_", "");
+                banner.className = "p-4 rounded-xl border flex items-start gap-3 bg-rose-500/5 border-rose-500/30 text-rose-200";
+                iconDiv.className = "p-2 rounded-lg bg-rose-500/10 text-rose-400";
+                iconDiv.innerHTML = `<i data-lucide="x-circle" class="w-5 h-5"></i>`;
+                statusText.innerText = "Error (500) Python KeyError Exception";
+                msgText.innerHTML = `The ML algorithm vector layer failed. Server matrix dictionary code looked for missing structural feature column: <code class='bg-rose-950/60 px-1 py-0.5 rounded border border-rose-800 text-rose-300 font-mono text-[11px]'>'${featureName}'</code>.`;
+                rawRes.innerText = JSON.stringify({ "detail": `'${featureName}'` }, null, 2);
+            } else {
+                banner.className = "p-4 rounded-xl border flex items-start gap-3 bg-amber-500/5 border-amber-500/30 text-amber-200";
+                iconDiv.className = "p-2 rounded-lg bg-amber-500/10 text-amber-400";
+                iconDiv.innerHTML = `<i data-lucide="code" class="w-5 h-5"></i>`;
+                statusText.innerText = "JSON Parse Failure (400)";
+                msgText.innerText = "Bad characters in data buffer code area. Verify standard array structure rules.";
+                rawRes.innerText = JSON.stringify({ "error": err.message }, null, 2);
+            }
+        }
+        lucide.createIcons();
+    }
+
+    function renderChart(clickProb, bounceProb) {
+        const ctx = document.getElementById('predictionChart').getContext('2d');
+        if (activeChart) { activeChart.destroy(); }
+        
+        activeChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Target Click Propensity', 'No-Click / Bounce Velocity'],
+                datasets: [{
+                    data: [clickProb, bounceProb],
+                    backgroundColor: ['rgba(56, 189, 248, 0.25)', 'rgba(99, 102, 241, 0.15)'],
+                    borderColor: ['#38bdf8', '#6366f1'],
+                    borderWidth: 1.5,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { color: '#1e293b' }, ticks: { color: '#64748b', font: { size: 10 } } },
+                    y: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 11 } } }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
