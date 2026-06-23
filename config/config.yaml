@@ -87,7 +87,7 @@ model_promotion:
 
 model_inference:
   root_dir: artifacts/inference
-  model_path: artifacts/model_training/xgboost_model.pkl
+  model_path: artifacts/model_promotion/production_model.pkl
   input_data_path: artifacts/data_ingestion/CTR_raw_data.csv
   prediction_output_path: artifacts/inference/predictions.csv
   target_column: click

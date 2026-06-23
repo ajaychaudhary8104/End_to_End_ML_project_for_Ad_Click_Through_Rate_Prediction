@@ -1,0 +1,342 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_01_data_ingestion
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 1f0422e85e15baab52fa98c43964d1ca
+      size: 3878
+    - path: src/ad_ctr_prediction/components/data_ingestion.py
+      hash: md5
+      md5: fc443f5cd38606cc5c5b4b02895d1ba2
+      size: 1699
+    - path: src/ad_ctr_prediction/pipeline/stage_01_data_ingestion.py
+      hash: md5
+      md5: 15921ee5c59ac76e9a410277fddbf551
+      size: 932
+    outs:
+    - path: artifacts/data_ingestion/CTR_raw_data.csv
+      hash: md5
+      md5: 5dc8dcb585dda440d6018a43075d2618
+      size: 37891785
+  data_validation:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_02_data_validation
+    deps:
+    - path: artifacts/data_ingestion/CTR_raw_data.csv
+      hash: md5
+      md5: 5dc8dcb585dda440d6018a43075d2618
+      size: 37891785
+    - path: config/config.yaml
+      hash: md5
+      md5: 1f0422e85e15baab52fa98c43964d1ca
+      size: 3878
+    - path: config/schema.yaml
+      hash: md5
+      md5: 166c764b0506f7137a12a0ea336221a9
+      size: 3915
+    - path: src/ad_ctr_prediction/components/data_validation.py
+      hash: md5
+      md5: f14d2a84f9e48cc755c60b9505c0425b
+      size: 37711
+    - path: src/ad_ctr_prediction/pipeline/stage_02_data_validation.py
+      hash: md5
+      md5: 551df53c6c8f08f446555ace05d4efd6
+      size: 1191
+    outs:
+    - path: artifacts/data_validation/dataset_statistics.json
+      hash: md5
+      md5: 77e1d347abf6d1cee4b1b74b5bc5933b
+      size: 181
+    - path: artifacts/data_validation/status.txt
+      hash: md5
+      md5: 3a15973920bf8264e0cdcbe85b763a42
+      size: 651
+    - path: artifacts/data_validation/validation_report.json
+      hash: md5
+      md5: 9a88a9ed7b1438ab17fc58049f524400
+      size: 2986
+  data_preprocessing:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_03_data_preprocessing
+    deps:
+    - path: artifacts/data_ingestion/CTR_raw_data.csv
+      hash: md5
+      md5: 5dc8dcb585dda440d6018a43075d2618
+      size: 37891785
+    - path: config/config.yaml
+      hash: md5
+      md5: 1f0422e85e15baab52fa98c43964d1ca
+      size: 3878
+    - path: src/ad_ctr_prediction/components/data_preprocessing.py
+      hash: md5
+      md5: 41a5d49a10c0c4ae1bb324c315d27988
+      size: 4653
+    - path: src/ad_ctr_prediction/pipeline/stage_03_data_preprocessing.py
+      hash: md5
+      md5: b232a1e002182f4852a99e84f04393e4
+      size: 984
+    outs:
+    - path: artifacts/data_preprocessing/preprocessed_data.csv
+      hash: md5
+      md5: a59e96a957c006e99b4479d936dffae9
+      size: 38083582
+    - path: artifacts/data_preprocessing/preprocessing_report.json
+      hash: md5
+      md5: 2eebf4461f2bd33e366851c4f9544eac
+      size: 105
+  feature_engineering:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_04_feature_engineering
+    deps:
+    - path: artifacts/data_preprocessing/preprocessed_data.csv
+      hash: md5
+      md5: a59e96a957c006e99b4479d936dffae9
+      size: 38083582
+    - path: config/config.yaml
+      hash: md5
+      md5: 1f0422e85e15baab52fa98c43964d1ca
+      size: 3878
+    - path: src/ad_ctr_prediction/components/feature_engineering.py
+      hash: md5
+      md5: 0b085c99693da6668fc0832ff75b05a1
+      size: 6325
+    - path: src/ad_ctr_prediction/pipeline/stage_04_feature_engineering.py
+      hash: md5
+      md5: 8694c8af0563106fabb33b1609601fa7
+      size: 1107
+    outs:
+    - path: artifacts/feature_engineering/feature_report.json
+      hash: md5
+      md5: 8fa0c81f1df5d6be0f9340fbc81b67e4
+      size: 29
+    - path: artifacts/feature_engineering/featured_data.csv
+      hash: md5
+      md5: fa4078796c6e5a4fd2cee2091f896ffc
+      size: 57478934
+  data_transformation:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_05_data_transformation
+    deps:
+    - path: artifacts/feature_engineering/featured_data.csv
+      hash: md5
+      md5: fa4078796c6e5a4fd2cee2091f896ffc
+      size: 57478934
+    - path: config/config.yaml
+      hash: md5
+      md5: 1f0422e85e15baab52fa98c43964d1ca
+      size: 3878
+    - path: config/schema.yaml
+      hash: md5
+      md5: 166c764b0506f7137a12a0ea336221a9
+      size: 3915
+    - path: params.yaml
+      hash: md5
+      md5: 1e0f0fce5dae488a4586dfb3af0d4269
+      size: 359
+    - path: src/ad_ctr_prediction/components/data_transformation.py
+      hash: md5
+      md5: 9930d0e0bdb13bdd96044579a0c1e6ff
+      size: 7558
+    - path: src/ad_ctr_prediction/pipeline/stage_05_data_transformation.py
+      hash: md5
+      md5: 6fc92d8c93f52bfb99bd25e6838850ec
+      size: 957
+    - path: src/ad_ctr_prediction/transformers/feature_manager.py
+      hash: md5
+      md5: fb45874a21fa196905463fb1cc735c70
+      size: 594
+    - path: src/ad_ctr_prediction/transformers/feature_selector.py
+      hash: md5
+      md5: da5b1db531e4d57a05238718c90f9639
+      size: 490
+    - path: src/ad_ctr_prediction/transformers/frequency_encoder.py
+      hash: md5
+      md5: 6c8a96bd96e4dd419fc6f2ab7df5db43
+      size: 780
+    - path: src/ad_ctr_prediction/transformers/imbalance_handler.py
+      hash: md5
+      md5: d142b96ec2d480afc9721436e63b1bfc
+      size: 183
+    - path: src/ad_ctr_prediction/transformers/preprocessor_builder.py
+      hash: md5
+      md5: bbd9f2281234bc49f80dd3ea0d7924b5
+      size: 1590
+    outs:
+    - path: artifacts/data_transformation/feature_names.pkl
+      hash: md5
+      md5: 1b24c7cb37938bc05177b0249542ad5f
+      size: 2751
+    - path: artifacts/data_transformation/feature_selector.pkl
+      hash: md5
+      md5: 32582519155747902545d7c97fc3d0d1
+      size: 3805
+    - path: artifacts/data_transformation/preprocessor.pkl
+      hash: md5
+      md5: 02d85e4fe7d130dc9bda6ccf10a8ead9
+      size: 6130
+    - path: artifacts/data_transformation/split_data/test.csv
+      hash: md5
+      md5: c73753349738a12a87fdebca072b6eb4
+      size: 11496239
+    - path: artifacts/data_transformation/split_data/train.csv
+      hash: md5
+      md5: 600ece983fa52e3b74bb6a0b7908ad0d
+      size: 53648649
+    - path: artifacts/data_transformation/split_data/validation.csv
+      hash: md5
+      md5: b811b675dcdd53f6035cd892e1b8f924
+      size: 11500144
+    - path: artifacts/data_transformation/transformation_metadata.json
+      hash: md5
+      md5: c76bd1b56991953a3d9fa520a9f6ac6a
+      size: 184
+  model_training:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_06_model_training
+    deps:
+    - path: artifacts/data_transformation/feature_selector.pkl
+      hash: md5
+      md5: 32582519155747902545d7c97fc3d0d1
+      size: 3805
+    - path: artifacts/data_transformation/preprocessor.pkl
+      hash: md5
+      md5: 02d85e4fe7d130dc9bda6ccf10a8ead9
+      size: 6130
+    - path: artifacts/data_transformation/split_data/train.csv
+      hash: md5
+      md5: 600ece983fa52e3b74bb6a0b7908ad0d
+      size: 53648649
+    - path: artifacts/data_transformation/split_data/validation.csv
+      hash: md5
+      md5: b811b675dcdd53f6035cd892e1b8f924
+      size: 11500144
+    - path: config/config.yaml
+      hash: md5
+      md5: 1f0422e85e15baab52fa98c43964d1ca
+      size: 3878
+    - path: params.yaml
+      hash: md5
+      md5: 1e0f0fce5dae488a4586dfb3af0d4269
+      size: 359
+    - path: src/ad_ctr_prediction/components/model_training.py
+      hash: md5
+      md5: 787bf4d74454df0e829e56ea55f4b4ac
+      size: 4549
+    - path: src/ad_ctr_prediction/pipeline/stage_06_model_training.py
+      hash: md5
+      md5: 9514346352e75395883dec318ec6266b
+      size: 881
+    outs:
+    - path: artifacts/model_training/model_metrics.json
+      hash: md5
+      md5: ef33d5fd8f01227492a6325eee22d20c
+      size: 348
+    - path: artifacts/model_training/xgboost_model.pkl
+      hash: md5
+      md5: 5576b78a69584ad696d2c3086da31428
+      size: 2379147
+  model_evaluation:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_07_model_evaluation
+    deps:
+    - path: artifacts/data_transformation/split_data/test.csv
+      hash: md5
+      md5: c73753349738a12a87fdebca072b6eb4
+      size: 11496239
+    - path: artifacts/model_training/xgboost_model.pkl
+      hash: md5
+      md5: 5576b78a69584ad696d2c3086da31428
+      size: 2379147
+    - path: config/config.yaml
+      hash: md5
+      md5: 1f0422e85e15baab52fa98c43964d1ca
+      size: 3878
+    - path: params.yaml
+      hash: md5
+      md5: 1e0f0fce5dae488a4586dfb3af0d4269
+      size: 359
+    - path: src/ad_ctr_prediction/components/model_evaluation.py
+      hash: md5
+      md5: eb4c3eef22469b5d503e4eb475b88506
+      size: 11240
+    - path: src/ad_ctr_prediction/pipeline/stage_07_model_evaluation.py
+      hash: md5
+      md5: bba087edcab5e5ae3a9501e13a297ffa
+      size: 907
+    outs:
+    - path: artifacts/model_evaluation/model_evaluation_metrics.json
+      hash: md5
+      md5: 641a5ee98cc6d6a46016f9230336574a
+      size: 1232
+  model_promotion:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_08_model_promotion
+    deps:
+    - path: artifacts/model_evaluation/model_evaluation_metrics.json
+      hash: md5
+      md5: 641a5ee98cc6d6a46016f9230336574a
+      size: 1232
+    - path: artifacts/model_training/xgboost_model.pkl
+      hash: md5
+      md5: 5576b78a69584ad696d2c3086da31428
+      size: 2379147
+    - path: config/config.yaml
+      hash: md5
+      md5: 1f0422e85e15baab52fa98c43964d1ca
+      size: 3878
+    - path: src/ad_ctr_prediction/components/model_promotion.py
+      hash: md5
+      md5: b3797b4c5c4a06cb79b0a75475637526
+      size: 5101
+    - path: src/ad_ctr_prediction/pipeline/stage_08_model_promotion.py
+      hash: md5
+      md5: f36829f0a6e2186c61f5cef9b68375c7
+      size: 890
+    outs:
+    - path: artifacts/model_promotion/production_model.pkl
+      hash: md5
+      md5: 5576b78a69584ad696d2c3086da31428
+      size: 2379147
+    - path: artifacts/model_promotion/promotion_summary.json
+      hash: md5
+      md5: ddc4edc983133e989356d43123cc1ce8
+      size: 270
+  model_inference:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_09_model_inference
+    deps:
+    - path: artifacts/data_ingestion/CTR_raw_data.csv
+      hash: md5
+      md5: 5dc8dcb585dda440d6018a43075d2618
+      size: 37891785
+    - path: artifacts/data_transformation/feature_names.pkl
+      hash: md5
+      md5: 1b24c7cb37938bc05177b0249542ad5f
+      size: 2751
+    - path: artifacts/data_transformation/feature_selector.pkl
+      hash: md5
+      md5: 32582519155747902545d7c97fc3d0d1
+      size: 3805
+    - path: artifacts/data_transformation/preprocessor.pkl
+      hash: md5
+      md5: 02d85e4fe7d130dc9bda6ccf10a8ead9
+      size: 6130
+    - path: artifacts/model_promotion/production_model.pkl
+      hash: md5
+      md5: 5576b78a69584ad696d2c3086da31428
+      size: 2379147
+    - path: config/config.yaml
+      hash: md5
+      md5: 1f0422e85e15baab52fa98c43964d1ca
+      size: 3878
+    - path: src/ad_ctr_prediction/components/inference.py
+      hash: md5
+      md5: 229308770c330afb32eaf087adecd8d6
+      size: 11204
+    - path: src/ad_ctr_prediction/pipeline/stage_09_model_inference.py
+      hash: md5
+      md5: b0a2befccf37150816a3b3aa4c520363
+      size: 986
+    - path: src/ad_ctr_prediction/transformers/ctr_feature_engineer.py
+      hash: md5
+      md5: de92e24f86ab16f976d6c5cbe6fbdc5e
+      size: 3768
+    outs:
+    - path: artifacts/inference/predictions.csv
+      hash: md5
+      md5: fb539501479a6dbc746c2a1f26aca4db
+      size: 38615543

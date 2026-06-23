@@ -1,0 +1,122 @@
+stages:
+
+  data_ingestion:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_01_data_ingestion
+    deps:
+      - src/ad_ctr_prediction/pipeline/stage_01_data_ingestion.py
+      - src/ad_ctr_prediction/components/data_ingestion.py
+      - config/config.yaml
+    outs:
+      - artifacts/data_ingestion/CTR_raw_data.csv
+
+  data_validation:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_02_data_validation
+    deps:
+      - src/ad_ctr_prediction/pipeline/stage_02_data_validation.py
+      - src/ad_ctr_prediction/components/data_validation.py
+      - artifacts/data_ingestion/CTR_raw_data.csv
+      - config/config.yaml
+      - config/schema.yaml
+    outs:
+      - artifacts/data_validation/status.txt
+      - artifacts/data_validation/validation_report.json
+      - artifacts/data_validation/dataset_statistics.json
+
+  data_preprocessing:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_03_data_preprocessing
+    deps:
+      - src/ad_ctr_prediction/pipeline/stage_03_data_preprocessing.py
+      - src/ad_ctr_prediction/components/data_preprocessing.py
+      - artifacts/data_ingestion/CTR_raw_data.csv
+      - config/config.yaml
+    outs:
+      - artifacts/data_preprocessing/preprocessed_data.csv
+      - artifacts/data_preprocessing/preprocessing_report.json
+
+  feature_engineering:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_04_feature_engineering
+    deps:
+      - src/ad_ctr_prediction/pipeline/stage_04_feature_engineering.py
+      - src/ad_ctr_prediction/components/feature_engineering.py
+      - artifacts/data_preprocessing/preprocessed_data.csv
+      - config/config.yaml
+    outs:
+      - artifacts/feature_engineering/featured_data.csv
+      - artifacts/feature_engineering/feature_report.json
+
+  data_transformation:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_05_data_transformation
+    deps:
+      - src/ad_ctr_prediction/pipeline/stage_05_data_transformation.py
+      - src/ad_ctr_prediction/components/data_transformation.py
+      - src/ad_ctr_prediction/transformers/feature_manager.py
+      - src/ad_ctr_prediction/transformers/feature_selector.py
+      - src/ad_ctr_prediction/transformers/frequency_encoder.py
+      - src/ad_ctr_prediction/transformers/imbalance_handler.py
+      - src/ad_ctr_prediction/transformers/preprocessor_builder.py
+      - artifacts/feature_engineering/featured_data.csv
+      - config/config.yaml
+      - config/schema.yaml
+      - params.yaml
+    outs:
+      - artifacts/data_transformation/split_data/train.csv
+      - artifacts/data_transformation/split_data/validation.csv
+      - artifacts/data_transformation/split_data/test.csv
+      - artifacts/data_transformation/preprocessor.pkl
+      - artifacts/data_transformation/feature_selector.pkl
+      - artifacts/data_transformation/feature_names.pkl
+      - artifacts/data_transformation/transformation_metadata.json
+
+  model_training:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_06_model_training
+    deps:
+      - src/ad_ctr_prediction/pipeline/stage_06_model_training.py
+      - src/ad_ctr_prediction/components/model_training.py
+      - artifacts/data_transformation/split_data/train.csv
+      - artifacts/data_transformation/split_data/validation.csv
+      - artifacts/data_transformation/preprocessor.pkl
+      - artifacts/data_transformation/feature_selector.pkl
+      - config/config.yaml
+      - params.yaml
+    outs:
+      - artifacts/model_training/xgboost_model.pkl
+      - artifacts/model_training/model_metrics.json
+
+  model_evaluation:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_07_model_evaluation
+    deps:
+      - src/ad_ctr_prediction/pipeline/stage_07_model_evaluation.py
+      - src/ad_ctr_prediction/components/model_evaluation.py
+      - artifacts/model_training/xgboost_model.pkl
+      - artifacts/data_transformation/split_data/test.csv
+      - config/config.yaml
+      - params.yaml
+    outs:
+      - artifacts/model_evaluation/model_evaluation_metrics.json
+
+  model_promotion:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_08_model_promotion
+    deps:
+      - src/ad_ctr_prediction/pipeline/stage_08_model_promotion.py
+      - src/ad_ctr_prediction/components/model_promotion.py
+      - artifacts/model_training/xgboost_model.pkl
+      - artifacts/model_evaluation/model_evaluation_metrics.json
+      - config/config.yaml
+    outs:
+      - artifacts/model_promotion/production_model.pkl
+      - artifacts/model_promotion/promotion_summary.json
+
+  model_inference:
+    cmd: python -m src.ad_ctr_prediction.pipeline.stage_09_model_inference
+    deps:
+      - src/ad_ctr_prediction/pipeline/stage_09_model_inference.py
+      - src/ad_ctr_prediction/components/inference.py
+      - src/ad_ctr_prediction/transformers/ctr_feature_engineer.py
+      - artifacts/model_promotion/production_model.pkl
+      - artifacts/data_transformation/preprocessor.pkl
+      - artifacts/data_transformation/feature_selector.pkl
+      - artifacts/data_transformation/feature_names.pkl
+      - artifacts/data_ingestion/CTR_raw_data.csv
+      - config/config.yaml
+    outs:
+      - artifacts/inference/predictions.csv
