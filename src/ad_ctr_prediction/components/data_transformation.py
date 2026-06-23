@@ -139,7 +139,7 @@ class DataTransformation:
             X_test,
             columns=feature_names
         )
-
+        logger.info(f"shape of X_train is {X_train.shape}")
         return X_train, X_val, X_test
     
     def save_preprocessor(self):

@@ -7,6 +7,8 @@ from ad_ctr_prediction.pipeline.stage_05_data_transformation import DataTransfor
 from ad_ctr_prediction.pipeline.stage_06_model_training import ModelTrainingPipeline
 from ad_ctr_prediction.pipeline.stage_07_model_evaluation import ModelEvaluationPipeline
 from src.ad_ctr_prediction.pipeline.stage_08_model_promotion import ModelPromotionPipeline
+from src.ad_ctr_prediction.pipeline.stage_09_model_inference import ModelInferencePipeline
+
 
 
 STAGE_NAME = "Data Ingestion stage"
@@ -90,6 +92,17 @@ STAGE_NAME = "Model Promotion stage"
 try:
    logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
    model_promotion = ModelPromotionPipeline()
+   model_promotion.main()
+   logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+except Exception as e:
+        logger.exception(e)
+        raise e
+
+
+STAGE_NAME = "Model Inference stage"
+try:
+   logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
+   model_promotion = ModelInferencePipeline()
    model_promotion.main()
    logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
 except Exception as e:

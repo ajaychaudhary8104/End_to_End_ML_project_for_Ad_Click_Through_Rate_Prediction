@@ -84,3 +84,18 @@ model_promotion:
   promote_threshold: 0.60
   archive_existing_versions: true
   copy_local_model: true  
+
+model_inference:
+  root_dir: artifacts/inference
+  model_path: artifacts/model_training/xgboost_model.pkl
+  input_data_path: artifacts/data_ingestion/CTR_raw_data.csv
+  prediction_output_path: artifacts/inference/predictions.csv
+  target_column: click
+  preprocessor_path: artifacts/data_transformation/preprocessor.pkl
+  feature_selector_path: artifacts/data_transformation/feature_selector.pkl
+  feature_names_path: artifacts/data_transformation/feature_names.pkl
+  drop_columns:
+    - timestamp
+    - user_id
+    - ad_id
+    - advertiser_id

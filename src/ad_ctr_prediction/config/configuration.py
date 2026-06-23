@@ -3,7 +3,8 @@ from src.ad_ctr_prediction.utils.common import read_yaml, create_directories
 from src.ad_ctr_prediction.entity.config_entity import (DataIngestionConfig, DataPreprocessingConfig,
                                                          DataValidationConfig, FeatureEngineeringConfig ,
                                                            DataTransformationConfig, ModelTrainingConfig,
-                                                           ModelEvaluationConfig, ModelPromotionConfig)
+                                                           ModelEvaluationConfig, ModelPromotionConfig,
+                                                           ModelInferenceConfig)
 
 
 class ConfigurationManager:
@@ -204,3 +205,23 @@ class ConfigurationManager:
         )
 
         return model_promotion_config  
+    
+
+    def get_model_inference_config(self) -> ModelInferenceConfig:
+        config = self.config.model_inference
+
+        create_directories([config.root_dir])
+
+        model_inference_config = ModelInferenceConfig(
+            root_dir=config.root_dir,
+            model_path=config.model_path,
+            input_data_path=config.input_data_path,
+            prediction_output_path=config.prediction_output_path,
+            target_column=config.target_column,
+            preprocessor_path=config.preprocessor_path,
+            feature_selector_path=config.feature_selector_path,
+            feature_names_path=config.feature_names_path,
+            drop_columns=list(config.drop_columns)
+        )
+          
+        return model_inference_config
