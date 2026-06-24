@@ -8,7 +8,7 @@ FILES_TO_UPLOAD = [
     "artifacts/data_transformation/preprocessor.pkl",
     "artifacts/data_transformation/feature_selector.pkl",
     "artifacts/data_transformation/feature_names.pkl",
-    "artifacts/model_training/xgboost_model.pkl"
+    "artifacts/model_promotion/production_model.pkl"
 ]
 
 
