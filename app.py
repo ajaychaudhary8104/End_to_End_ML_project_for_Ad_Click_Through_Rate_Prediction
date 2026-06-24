@@ -15,7 +15,7 @@ from pydantic import BaseModel, Field
 from src.ad_ctr_prediction import logger
 from src.ad_ctr_prediction.config.configuration import ConfigurationManager
 from src.ad_ctr_prediction.components.inference import ModelInference
-#from src.ad_ctr_prediction.utils.s3_loader import download_artifacts
+from src.ad_ctr_prediction.utils.s3_loader import download_artifacts
 
 # =========================================================
 # PATH CONFIGURATION
@@ -125,9 +125,9 @@ def initialize_inference() -> ModelInference:
 async def lifespan(app: FastAPI):
 
     try:
-        # logger.info("Downloading model artifacts from S3...")
+        logger.info("Downloading model artifacts from S3...")
 
-        # download_artifacts()
+        download_artifacts()
 
         logger.info("Initializing inference pipeline...")
         
