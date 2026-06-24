@@ -17,3 +17,16 @@ To modify the pipeline:
 set MLFLOW_TRACKING_URI=https://dagshub.com/ajaychaudhary8104/End_to_End_ML_project_for_Ad_Click_Through_Rate_Prediction.mlflow
 set MLFLOW_TRACKING_USERNAME=ajaychaudhary8104
 set MLFLOW_TRACKING_PASSWORD=gangapur8955
+
+
+## Build Docker Image
+
+```bash
+docker build -t ad-ctr-prediction:latest .
+```
+
+## Run Docker Container
+
+```bash
+docker run -p 8000:8000 ad-ctr-prediction:latest
+```
