@@ -103,9 +103,6 @@ Feature Engineering
 Data Transformation
     │
     ▼
-Train / Validation / Test Split
-    │
-    ▼
 Model Training
     │
     ▼
@@ -194,7 +191,7 @@ Ad_CTR_Prediction/
 ├── templates/
 │   └── index.html
 │
-├── static/
+├
 │
 ├── src/
 │
@@ -207,8 +204,8 @@ Ad_CTR_Prediction/
 │       ├── constants/
 │       ├── transformers/
 │       ├── utils/
-│       ├── monitoring/
-│       └── api/
+│      
+│     
 │
 ├── Dockerfile
 ├── app.py
@@ -611,9 +608,6 @@ Production API
 S3 stores:
 
 ```text
-Raw Datasets
-
-DVC Artifacts
 
 Models
 
@@ -621,9 +615,7 @@ Preprocessors
 
 Feature Selectors
 
-Evaluation Reports
-
-Inference Outputs
+Feature Names
 ```
 
 Configure Remote:
@@ -748,7 +740,7 @@ Future Enhancements:
 ### Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/ajaychaudhary8104/End_to_End_ML_project_for_Ad_Click_Through_Rate_Prediction.git
 
 cd Ad_CTR_Prediction
 ```
@@ -795,7 +787,7 @@ http://localhost:8000/api/docs
 
 # 👨‍💻 Author
 
-**Ajay Jat**
+**Ajay Chaudhary**
 
 Machine Learning Engineer | MLOps Engineer | Data Scientist
 

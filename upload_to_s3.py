@@ -29,11 +29,13 @@ def upload_to_s3():
 
             if not file_path.exists():
                 raise FileNotFoundError(f"{file_path} not found")
-
+            
+            s3_key = file_path.as_posix()
+            
             s3.upload_file(
                 str(file_path),
                 S3_BUCKET,
-                str(file_path)
+                s3_key
             )
 
             print(f"Uploaded: {file_path}")
