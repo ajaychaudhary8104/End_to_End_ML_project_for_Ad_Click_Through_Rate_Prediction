@@ -127,7 +127,7 @@ async def lifespan(app: FastAPI):
     try:
         logger.info("Downloading model artifacts from S3...")
 
-        download_artifacts()
+        download_artifacts(force_download=True)
 
         logger.info("Initializing inference pipeline...")
         

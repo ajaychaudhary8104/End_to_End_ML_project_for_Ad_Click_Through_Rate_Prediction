@@ -62,9 +62,9 @@ def download_artifacts(force_download: bool = False) -> bool:
             )
 
             s3.download_file(
-                Bucket=S3_BUCKET,
-                Key=file_key,
-                Filename=local_path,
+                S3_BUCKET,
+                file_key,
+                local_path,
             )
 
             if not os.path.exists(local_path):
